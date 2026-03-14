@@ -68,6 +68,8 @@ jobs:
       
       - name: Verify server starts
         run: |
-          timeout 10s npm start &
-          sleep 3
-          curl -f http://localhost:3000/health || exit 1
+          npm start &
+          SERVER_PID=$!
+          sleep 5
+          curl -f http://localhost:3000/health || { kill $SERVER_PID; exit 1; }
+          kill $SERVER_PID
